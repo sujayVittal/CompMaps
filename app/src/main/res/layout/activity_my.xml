@@ -11,7 +11,7 @@
         android:layout_marginBottom="70dp"
         android:layout_marginTop="20dp"
         android:text="Direction Pointing: 0.0"
-        android:textSize="30dp"
+        android:textSize="31dp"
         android:textColor="#353543"/>
 
     <ImageView
