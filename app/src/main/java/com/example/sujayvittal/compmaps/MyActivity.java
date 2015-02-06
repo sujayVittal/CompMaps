@@ -6,10 +6,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MyActivity extends Activity implements SensorEventListener {
 
@@ -24,20 +27,7 @@ public class MyActivity extends Activity implements SensorEventListener {
 
     TextView tvHeading;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my);
-
-        //
-        image = (ImageView) findViewById(R.id.imageViewCompass);
-
-        // TextView that will tell the user what degree is he heading
-        tvHeading = (TextView) findViewById(R.id.tvHeading);
-
-        // initialize your android device sensor capabilities
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-    }
+    Button record, done;
 
     @Override
     protected void onResume() {
@@ -60,7 +50,7 @@ public class MyActivity extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
         // get the angle around the z-axis rotated
-        float degree = Math.round(event.values[0]);
+        final float degree = Math.round(event.values[0]);
 
         tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
 
@@ -81,6 +71,37 @@ public class MyActivity extends Activity implements SensorEventListener {
         // Start the animation
         image.startAnimation(ra);
         currentDegree = -degree;
+        record = (Button) findViewById(R.id.button);
+        final DynamicQueueImpl queue = new DynamicQueueImpl();
+        record.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                try {
+                    Thread.sleep(3000);                 //1000 milliseconds is one second.
+                } catch(InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+                queue.enqueue((int)degree);
+                Toast.makeText(getApplicationContext(), "Success! The current destination has been added to the route!", Toast.LENGTH_LONG).show();
+                done = (Button) findViewById(R.id.button2);
+                done.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        try {
+                            Thread.sleep(3000);                 //1000 milliseconds is one second.
+                        } catch(InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+
+                        queue.dequeue();
+                        Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+
+
+
 
     }
 
@@ -88,4 +109,22 @@ public class MyActivity extends Activity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // not in use
     }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my);
+
+        //
+        image = (ImageView) findViewById(R.id.imageViewCompass);
+
+        // TextView that will tell the user what degree is he heading
+        tvHeading = (TextView) findViewById(R.id.tvHeading);
+
+        // initialize your android device sensor capabilities
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+
+    }
+
+
 }

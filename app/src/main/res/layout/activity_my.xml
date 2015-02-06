@@ -7,19 +7,44 @@
         android:id="@+id/tvHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp"
-        android:layout_marginTop="20dp"
         android:text="Direction Pointing: 0.0"
         android:textSize="31dp"
-        android:textColor="#353543"/>
+        android:textColor="#353543"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp" />
 
     <ImageView
         android:id="@+id/imageViewCompass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHeading"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/use" />
+        android:src="@drawable/use"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Record"
+        android:textSize="20sp"
+        android:id="@+id/button"
+        android:layout_above="@+id/button2"
+        android:layout_alignLeft="@+id/tvHeading"
+        android:layout_alignStart="@+id/tvHeading"
+        android:layout_alignRight="@+id/tvHeading"
+        android:layout_alignEnd="@+id/tvHeading" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:textSize="20sp"
+        android:id="@+id/button2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/button"
+        android:layout_alignStart="@+id/button"
+        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button" />
+
 
 </RelativeLayout>
