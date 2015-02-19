@@ -18,6 +18,7 @@ public class MyActivity extends Activity implements SensorEventListener {
 
     // define the display assembly compass picture
     private ImageView image;
+    LinkedQueue lq = new LinkedQueue();
 
     // record the compass picture angle turned
     private float currentDegree = 0f;
@@ -72,7 +73,10 @@ public class MyActivity extends Activity implements SensorEventListener {
         image.startAnimation(ra);
         currentDegree = -degree;
         record = (Button) findViewById(R.id.button);
-        final DynamicQueueImpl queue = new DynamicQueueImpl();
+
+        //queue = new GenQueue<Directions>();
+        //final DynamicQueueImpl queue = new DynamicQueueImpl();
+
         record.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -81,7 +85,8 @@ public class MyActivity extends Activity implements SensorEventListener {
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
-                queue.enqueue((int)degree);
+                lq.insert((int)degree);
+                lq.display();
                 Toast.makeText(getApplicationContext(), "Success! The current destination has been added to the route!", Toast.LENGTH_LONG).show();
                 done = (Button) findViewById(R.id.button2);
                 done.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +98,7 @@ public class MyActivity extends Activity implements SensorEventListener {
                             Thread.currentThread().interrupt();
                         }
 
-                        queue.dequeue();
+                        lq.remove();
                         Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
                     }
                 });
