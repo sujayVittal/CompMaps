@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-
+/* Used for confirmation on quitting */
 public class confirmation extends Activity {
 
     Button yes, no;

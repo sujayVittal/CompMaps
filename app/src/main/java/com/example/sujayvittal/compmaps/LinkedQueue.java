@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by sujayvittal on 18/02/15.
+ * Data structure to store the directions
  */
 public class LinkedQueue {
     protected Node front, rear;

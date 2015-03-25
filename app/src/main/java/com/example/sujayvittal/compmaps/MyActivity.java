@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+/* Main activity*/
+
 public class MyActivity extends Activity implements SensorEventListener {
 
     // define the display assembly compass picture
