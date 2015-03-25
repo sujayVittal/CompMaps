@@ -137,7 +137,7 @@ public class MyActivity extends Activity implements SensorEventListener {
             public void onClick(View v) {
 
 
-               
+
                 Intent intent = new Intent(MyActivity.this, confirmation.class);
                 startActivity(intent);
             }
