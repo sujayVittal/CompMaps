@@ -2,6 +2,7 @@ package com.example.sujayvittal.compmaps;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -31,7 +32,7 @@ public class MyActivity extends Activity implements SensorEventListener {
 
     TextView tvHeading;
 
-    Button record, done;
+    Button record, done, exit, directions;
 
     @Override
     protected void onResume() {
@@ -131,6 +132,28 @@ public class MyActivity extends Activity implements SensorEventListener {
                 });
             }
         });
+        exit = (Button) findViewById(R.id.button5);
+        exit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+
+                Toast.makeText(getApplicationContext(), "Thank you for using CompMaps!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        directions = (Button) findViewById(R.id.button4);
+        directions.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+
+                Toast.makeText(getApplicationContext(), "No stored directions!", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
 
 
 

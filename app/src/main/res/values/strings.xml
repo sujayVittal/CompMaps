@@ -10,6 +10,7 @@
     <string name="step_detector">
          android.hardware.sensor.stepdetector
    </string>
+    <string name="Welcome">Welcome to the future!</string>
 
 
 </resources>
