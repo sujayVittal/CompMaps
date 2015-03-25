@@ -137,10 +137,8 @@ public class MyActivity extends Activity implements SensorEventListener {
             public void onClick(View v) {
 
 
-                Toast.makeText(getApplicationContext(), "Thank you for using CompMaps!", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+               
+                Intent intent = new Intent(MyActivity.this, confirmation.class);
                 startActivity(intent);
             }
         });

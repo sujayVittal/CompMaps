@@ -12,13 +12,20 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <uses-feature
-                    android:name="@string/step_detector" android:required="false"/>
+                    android:name="@string/step_detector"
+                    android:required="false" />
                 <uses-feature
-                    android:name="@string/step_counter" android:required="false"/>
+                    android:name="@string/step_counter"
+                    android:required="false" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".confirmation"
+            android:label="@string/title_activity_confirmation" >
         </activity>
     </application>
 
