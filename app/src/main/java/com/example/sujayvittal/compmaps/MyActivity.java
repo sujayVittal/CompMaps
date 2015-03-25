@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -15,6 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 
 
 /* Main activity*/
@@ -123,13 +128,32 @@ public class MyActivity extends Activity implements SensorEventListener {
                 done.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
-                        try {
+                        /*try {
                             Thread.sleep(3000);                 //1000 milliseconds is one second.
                         } catch(InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
+                        */
+                        while(!"null".equals(lq.isEmpty())){
+                            try {
+                            File newFolder = new File(Environment.getExternalStorageDirectory(), "TestFolder");
+                            if (!newFolder.exists()) {
+                                newFolder.mkdir();
+                            }
+                            try {
+                                File file = new File(newFolder, "MyTest" + ".txt");
+                                file.createNewFile();
+                                FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                                BufferedWriter bw = new BufferedWriter(fw);
+                                bw.write(lq.remove());
+                                bw.close();
+                            } catch (Exception ex) {
+                                System.out.println("ex: " + ex);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("e: " + e);
+                        }}
 
-                        lq.remove();
                         Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
                     }
                 });

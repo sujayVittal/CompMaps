@@ -1,0 +1,4 @@
+Project Description:
+
+CompMaps is a compass that gives directions that are being pointed to and stores them in a data structure which can be retrieved later in order to get directions to a place. 
+NOTE: the directions can be noticed by plugging the phone and using it in debug mode in android studio. The console will show the recorded directions
