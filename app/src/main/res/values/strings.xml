@@ -8,5 +8,6 @@
     <string name="step_detector">         android.hardware.sensor.stepdetector</string>
     <string name="Welcome">Welcome to the future!</string>
     <string name="title_activity_confirmation">confirmation</string>
+    <string name="title_activity_file_operations">FileOperations</string>
 
 </resources>

@@ -8,7 +8,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -16,10 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 
 
 /* Main activity*/
@@ -37,6 +32,8 @@ public class MyActivity extends Activity implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mStepCounterSensor;
     private Sensor mStepDetectorSensor;
+
+
 
     TextView tvHeading;
 
@@ -116,25 +113,23 @@ public class MyActivity extends Activity implements SensorEventListener {
         record.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                try {
-                    Thread.sleep(3000);                 //1000 milliseconds is one second.
-                } catch(InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
+
                 lq.insert((int)degree);
                 lq.display();
                 Toast.makeText(getApplicationContext(), "Success! The current destination has been added to the route!", Toast.LENGTH_LONG).show();
-                done = (Button) findViewById(R.id.button2);
-                done.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
 
-                        /*try {
-                            Thread.sleep(3000);                 //1000 milliseconds is one second.
-                        } catch(InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                        */
-                        while(!"null".equals(lq.isEmpty())){
+            }
+        });
+
+
+        done = (Button) findViewById(R.id.button2);
+        done.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(MyActivity.this, FileOperations.class);
+                startActivity(i);
+
+
+                       /* while(!"null".equals(lq.isEmpty())){
                             try {
                             File newFolder = new File(Environment.getExternalStorageDirectory(), "TestFolder");
                             if (!newFolder.exists()) {
@@ -152,13 +147,13 @@ public class MyActivity extends Activity implements SensorEventListener {
                             }
                         } catch (Exception e) {
                             System.out.println("e: " + e);
-                        }}
+                        }}*/
 
-                        Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
-                    }
-                });
+                Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
             }
         });
+
+
         exit = (Button) findViewById(R.id.button5);
         exit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
