@@ -4,19 +4,22 @@ package com.example.sujayvittal.compmaps;
  */
 class Node
 {
-    protected int data;
+    protected int data1;
+    protected int data2;
     protected Node link;
 
     /*  Constructor  */
     public Node()
     {
         link = null;
-        data = 0;
+        data1 = 0;
+        data2 = 0;
     }
     /*  Constructor  */
-    public Node(int d,Node n)
+    public Node(int d1, int d2 ,Node n)
     {
-        data = d;
+        data1 = d1;
+        data2 = d2;
         link = n;
     }
     /*  Function to set link to next Node  */
@@ -25,9 +28,9 @@ class Node
         link = n;
     }
     /*  Function to set data to current Node  */
-    public void setData(int d)
+    public void setData(int d1, int d2)
     {
-        data = d;
+        data1 = d1; data2=d2;
     }
     /*  Function to get link to next node  */
     public Node getLink()
@@ -35,9 +38,9 @@ class Node
         return link;
     }
     /*  Function to get data from current Node  */
-    public int getData()
+    public int[] getData()
     {
-        return data;
+        return new int[] {data1, data2};
     }
 }
 

@@ -2,7 +2,6 @@ package com.example.sujayvittal.compmaps;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,20 +11,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 /*
 * Created on April 4, 2015 by Sujay */
 
 public class FileOperations extends Activity {
-    LinkedQueue lq = new LinkedQueue();
+    //LinkedQueue lq = new LinkedQueue();
+
     public FileOperations() {
     }
-    public Boolean write(String fname, int [] fcontent){
+    /*public Boolean write(String fname){
         try {
+            MyActivity ref = new MyActivity();
             String fpath = "/sdcard/"+fname+".txt";
             File file = new File(fpath);
             // If file does not exists, then create it
@@ -35,9 +33,11 @@ public class FileOperations extends Activity {
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
             //bw.write();
-            for (int p = (fcontent.length-1); p < 0; p++) {
-                bw.write(fcontent[p]);
+            while(ref.lq.getSize()!=0) {
+                bw.write(ref.lq.remove());
             }
+
+            ref.lq.display();
             bw.close();
             Log.d("Suceess", "Sucess");
             return true;
@@ -45,8 +45,9 @@ public class FileOperations extends Activity {
             e.printStackTrace();
             return false;
         }
-    }
+    }*/
     public String read(String fname){
+
         BufferedReader br = null;
         String response = null;
         try {
@@ -66,7 +67,7 @@ public class FileOperations extends Activity {
         return response;
     }
 
-    EditText fname,fcontent,fnameread;
+    EditText fname,fnameread;
     Button write,read;
     TextView filecon;
     @Override
@@ -74,7 +75,7 @@ public class FileOperations extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_operations);
         fname = (EditText)findViewById(R.id.fname);
-        fcontent = (EditText)findViewById(R.id.ftext);
+
         fnameread = (EditText)findViewById(R.id.fnameread);
         write = (Button)findViewById(R.id.btnwrite);
         read = (Button)findViewById(R.id.btnread);
@@ -84,15 +85,16 @@ public class FileOperations extends Activity {
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
                 String filename = fname.getText().toString();
-                FileOperations fop = new FileOperations();
+                MyActivity fop = new MyActivity();
                 //Loop begins now
 
-                int [] filecontent = new int[100];
+                /*int [] filecontent = new int[100];
                 for(int p = 0; p <lq.size; p++) {
                     filecontent[p] = lq.remove();
-                }
-                fop.write(filename, filecontent);
-                if(fop.write(filename, filecontent)){
+                }*/
+
+                fop.write(filename);
+                if(fop.write(filename)){
                     Toast.makeText(getApplicationContext(), filename + ".txt created", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(), "I/O error", Toast.LENGTH_SHORT).show();

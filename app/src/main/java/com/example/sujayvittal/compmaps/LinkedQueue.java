@@ -28,9 +28,9 @@ public class LinkedQueue {
         return size;
     }
     /*  Function to insert an element to the queue */
-    public void insert(int data)
+    public void insert(int data1, int data2)
     {
-        Node nptr = new Node(data, null);
+        Node nptr = new Node(data1, data2, null);
         if (rear == null)
         {
             front = nptr;
@@ -44,7 +44,7 @@ public class LinkedQueue {
         size++ ;
     }
     /*  Function to remove front element from the queue */
-    public int remove()
+    public int[] remove()
     {
         if (isEmpty() )
             throw new NoSuchElementException("Underflow Exception");
@@ -56,27 +56,39 @@ public class LinkedQueue {
         return ptr.getData();
     }
     /*  Function to check the front element of the queue */
-    public int peek()
+    public int[] peek()
     {
         if (isEmpty() )
             throw new NoSuchElementException("Underflow Exception");
         return front.getData();
     }
     /*  Function to display the status of the queue */
-    public void display()
+    public String display()
     {
-        System.out.print("\nCo-ordinates (in degrees) = ");
+        int[] data= new int[2];
+        
+        String result=null;
         if (size == 0)
         {
             System.out.print("Empty\n");
-            return ;
+            return null;
         }
         Node ptr = front;
         while (ptr != rear.getLink() )
         {
-            System.out.print(ptr.getData()+" ");
+
+            data = ptr.getData();
+           // int a[] = new int[2];
+            result = ("Go "+data[0]+" for "+data[1]+" seconds!");
+            //System.out.println(result);
             ptr = ptr.getLink();
+            return result;
+
+           // System.out.print(ptr.getData() + " ");
+
         }
+
         System.out.println();
+        return result;
     }
 }
