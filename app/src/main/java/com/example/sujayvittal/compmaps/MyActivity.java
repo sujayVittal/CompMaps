@@ -288,7 +288,7 @@ public class MyActivity extends Activity implements SensorEventListener {
                 Intent i = new Intent(MyActivity.this, ListFileActivity.class);
                 startActivity(i);
 
-                Toast.makeText(getApplicationContext(), "directions.txt is the Route File available", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Scroll down to the Routes folder to fild the list of Route Files available!", Toast.LENGTH_LONG).show();
 
             }
         });
