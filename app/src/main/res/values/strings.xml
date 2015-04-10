@@ -9,5 +9,6 @@
     <string name="Welcome">Welcome to the future!</string>
     <string name="title_activity_confirmation">confirmation</string>
     <string name="title_activity_file_operations">FileOperations</string>
+    <string name="title_activity_list_file">ListFileActivity</string>
 
 </resources>

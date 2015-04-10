@@ -66,7 +66,7 @@ public class LinkedQueue {
     public String display()
     {
         int[] data= new int[2];
-        
+
         String result=null;
         if (size == 0)
         {

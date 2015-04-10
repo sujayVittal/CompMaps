@@ -226,6 +226,7 @@ public class MyActivity extends Activity implements SensorEventListener {
                 long time = time_sub-time_current;
                 lq.insert((int)degree, (int)time);
                 //lq.display();
+
                 collection.add(lq.display());
                 writeToSDFile();
                 //Toast.makeText(getApplicationContext(), "Success! The current destination has been added to the route!", Toast.LENGTH_LONG).show();
@@ -284,9 +285,10 @@ public class MyActivity extends Activity implements SensorEventListener {
         directions = (Button) findViewById(R.id.button4);
         directions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Intent i = new Intent(MyActivity.this, ListFileActivity.class);
+                startActivity(i);
 
-
-                Toast.makeText(getApplicationContext(), "No stored directions!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "directions.txt is the Route File available", Toast.LENGTH_LONG).show();
 
             }
         });

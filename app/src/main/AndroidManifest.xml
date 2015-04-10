@@ -17,7 +17,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <activity
             android:name=".MyActivity"
             android:label="@string/app_name" >
@@ -34,6 +33,10 @@
         <activity
             android:name=".FileOperations"
             android:label="@string/title_activity_file_operations" >
+        </activity>
+        <activity
+            android:name=".ListFileActivity"
+            android:label="@string/title_activity_list_file" >
         </activity>
     </application>
 
