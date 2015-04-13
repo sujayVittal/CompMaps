@@ -1,13 +1,11 @@
 package com.example.sujayvittal.compmaps;
 
-import java.util.NoSuchElementException;
-
 /**
  * Created by sujayvittal on 18/02/15.
  * Data structure to store the directions
  */
 public class LinkedQueue {
-    protected Node front, rear;
+    private Node front, rear;
     public int size;
 
     /* Constructor */
@@ -28,67 +26,100 @@ public class LinkedQueue {
         return size;
     }
     /*  Function to insert an element to the queue */
-    public void insert(int data1, int data2)
+    public void insert(int data1)
     {
-        Node nptr = new Node(data1, data2, null);
-        if (rear == null)
-        {
+        Node nptr = new Node(data1, null);
+        if (rear == null) {
             front = nptr;
-            rear = nptr;
         }
-        else
-        {
-            rear.setLink(nptr);
-            rear = rear.getLink();
+        else{
+            rear.setNextNode(nptr);
+            rear = rear.getNextNode();
         }
+
         size++ ;
+        rear = nptr;
     }
     /*  Function to remove front element from the queue */
-    public int[] remove()
+    public int remove()
     {
-        if (isEmpty() )
-            throw new NoSuchElementException("Underflow Exception");
-        Node ptr = front;
-        front = ptr.getLink();
-        if (front == null)
-            rear = null;
-        size-- ;
-        return ptr.getData();
+        int firstNode = 0;
+        size--;
+        if (!isEmpty())
+        {
+            firstNode =front.getData();
+            front=front.getNextNode();
+
+            if (front==null)
+                rear=null;
+        }
+
+        return firstNode;
     }
     /*  Function to check the front element of the queue */
-    public int[] peek()
+    public int getFront()
     {
-        if (isEmpty() )
-            throw new NoSuchElementException("Underflow Exception");
-        return front.getData();
+        int firstNode = 0;
+        if (!isEmpty())
+            firstNode = front.getData();
+        return firstNode;
     }
-    /*  Function to display the status of the queue */
-    public String display()
+    /**
+     * The getValues is a method used to return a String containing all the names of the items in the
+     * queue
+     * @return returns a String containing all the names of the items in the queue.
+     */
+    public String getValues()
     {
-        int[] data= new int[2];
+        Node firstNode=front;
+        String result="";
 
-        String result=null;
+        while (firstNode!=null)
+        {
+            result=(String)result+" "+firstNode.getData();
+            firstNode=firstNode.next;
+        }
+        result=result.substring(1,result.length());
+
+        return result;
+    }
+    public void display()
+    {
+        Node firstnode=front;
+
+        while (firstnode!=null)
+        {
+            System.out.println(firstnode.getData());
+            firstnode=firstnode.next;
+        }
+
+    }/*  Function to display the status of the queue */
+    /*public void display()
+    {
+       // int[] data= new int[2];
+        System.out.println();
+
         if (size == 0)
         {
             System.out.print("Empty\n");
-            return null;
+
         }
         Node ptr = front;
         while (ptr != rear.getLink() )
         {
 
-            data = ptr.getData();
-           // int a[] = new int[2];
-            result = ("Go "+data[0]+" for "+data[1]+" seconds!");
-            //System.out.println(result);
+           // data = ptr.getData();
+            // int a[] = new int[2];
+            int result = ptr.getData();
+            System.out.println(result);
             ptr = ptr.getLink();
-            return result;
 
-           // System.out.print(ptr.getData() + " ");
+
+            // System.out.print(ptr.getData() + " ");
 
         }
 
         System.out.println();
-        return result;
-    }
+
+    }*/
 }

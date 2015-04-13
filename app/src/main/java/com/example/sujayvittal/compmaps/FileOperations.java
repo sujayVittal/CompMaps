@@ -93,12 +93,8 @@ public class FileOperations extends Activity {
                     filecontent[p] = lq.remove();
                 }*/
 
-                fop.write(filename);
-                if(fop.write(filename)){
-                    Toast.makeText(getApplicationContext(), filename + ".txt created", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "I/O error", Toast.LENGTH_SHORT).show();
-                }
+               // fop.write(filename);
+
             }
         });
         read.setOnClickListener(new View.OnClickListener() {

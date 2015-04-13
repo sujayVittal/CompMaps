@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -32,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 
 
 /* Main activity*/
@@ -55,20 +57,21 @@ public class MyActivity extends Activity implements SensorEventListener {
     EditText fname1;
 
     TextView tv;
+    public float degree;
 
     TextView tvHeading;
     ArrayList<String> collection = new ArrayList<String>();
-    Button record, done, exit, directions;
+    Button record, done, exit, directions, check, check_done;
 
     @Override
     protected void onResume() {
         super.onResume();
 
         // for the system's orientation sensor registered listeners
-         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
         //Added for counting the number of steps
-         mSensorManager.registerListener(this, mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
-         mSensorManager.registerListener(this, mStepDetectorSensor,SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mStepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
 
@@ -116,7 +119,7 @@ public class MyActivity extends Activity implements SensorEventListener {
      WRITE_EXTERNAL_STORAGE permission to the manifest file or this method will throw
      a FileNotFound Exception because you won't have write permission. */
 
-    private void writeToSDFile(){
+    private void writeToSDFile(String filename){
 
         // Find the root of the external storage.
         // See http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
@@ -130,13 +133,13 @@ public class MyActivity extends Activity implements SensorEventListener {
 
         File dir = new File (root.getAbsolutePath() + "/download");
         dir.mkdirs();
-        File file = new File(dir, "directions.txt");
+        File file = new File(dir, filename);
 
         try {
             FileOutputStream f = new FileOutputStream(file);
             PrintWriter pw = new PrintWriter(f);
             pw.println(collection);
-            pw.println("Here is a second line.");
+            //pw.println("Here is a second line.");
             pw.flush();
             pw.close();
             f.close();
@@ -153,46 +156,76 @@ public class MyActivity extends Activity implements SensorEventListener {
     }
     /** Method to read in a text file placed in the res/raw directory of the application. The
      method reads in all lines of the file sequentially. */
+    public static int randInt(int min, int max) {
 
-    private void readRaw(){
-        tv.append("\n\nData read from res/raw/textfile.txt:\n");
+        // NOTE: Usually this should be a field rather than a method
+        // variable so that it is not re-seeded every call.
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
+    }
+
+
+    private void readRaw() throws FileNotFoundException{
+        //tv.append("\n\nData read from route_1.txt: \n");
         tv.setEnabled(false);
         tv.setClickable(false);
-        InputStream is = this.getResources().openRawResource(R.raw.textfile);
+        File sdcard = Environment.getExternalStorageDirectory();
+
+//Get the text file
+        File file = new File(sdcard,"directions.txt");
+        File file2 = new File(sdcard, "routes_1.txt");
+
+//Read text from file
+
+
+        File file_3 = new File(sdcard, "routes_1.txt");
+        InputStream is = new FileInputStream(file_3);
         InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr, 8192);    // 2nd arg is buffer size
+        BufferedReader br = new BufferedReader(isr, 8192);
+
+        File file_2 = new File(sdcard,"directions.txt");
+        InputStream is2 = new FileInputStream(file_2);
+        InputStreamReader file_2_r = new InputStreamReader(is2);
+        BufferedReader br_2 = new BufferedReader(file_2_r, 8192);
+
+          // 2nd arg is buffer size
 
         // More efficient (less readable) implementation of above is the composite expression
                   /*BufferedReader br = new BufferedReader(new InputStreamReader(
                            this.getResources().openRawResource(R.raw.textfile)), 8192);*/
 
         try {
-            String test;
+            String test, test1;
             while (true){
                 test = br.readLine();
+                test1 = br_2.readLine();
                 // readLine() returns null if no more lines in the file
-                if(test == null) break;
-                tv.append("\n"+"    "+test);
+                if(test == null && test1 == null) break;
+                else if(test.equals(test1)) Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
+                else Toast.makeText(getApplicationContext(), "Unsuccessful!", Toast.LENGTH_LONG).show();
             }
             isr.close();
             is.close();
             br.close();
+            br_2.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        tv.append("\n\nThat is all");
         tv.setEnabled(false);
         tv.setClickable(false);
     }
-
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
 
 
         // get the angle around the z-axis rotated
-        final float degree = Math.round(event.values[0]);
+         degree = Math.round(event.values[0]);
 
         tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
 
@@ -220,64 +253,29 @@ public class MyActivity extends Activity implements SensorEventListener {
         record.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 long time_sub = SystemClock.uptimeMillis();
-                fname1 = (EditText)findViewById(R.id.fname1);
+                //fname1 = (EditText)findViewById(R.id.fname1);
 
                 long time_current = System.currentTimeMillis();
                 long time = time_sub-time_current;
-                lq.insert((int)degree, (int)time);
-                //lq.display();
+                lq.insert((int)degree);
 
-                collection.add(lq.display());
-                writeToSDFile();
-                //Toast.makeText(getApplicationContext(), "Success! The current destination has been added to the route!", Toast.LENGTH_LONG).show();
-                //printCollection(collection);
+                //fname1 = (EditText)findViewById(R.id.fname1);
 
-                fname1 = (EditText)findViewById(R.id.fname1);
+                Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
                 done = (Button) findViewById(R.id.button2);
                 done.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        lq.display();
-                        try {
-
-                            String fpath = "/sdcard/"+fname1+".txt";
-                            File file = new File(fpath);
-                            // If file does not exists, then create it
-                            if (!file.exists()) {
-                                file.createNewFile();
-                            }
-                            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                            BufferedWriter bw = new BufferedWriter(fw);
-                            //bw.write();
-                            while(lq.getSize()!=0) {
-                                //bw.write(lq.remove());
-                            }
-                            lq.display();
-                            bw.close();
-                            Log.d("Suceess", "Sucess");
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-
-                        }
-                        System.out.println("This is before intent");
-                        lq.display();
-                        Intent i = new Intent(MyActivity.this, FileOperations.class);
-                        startActivity(i);
+                        collection.add(lq.getValues());
+                        String filename = "directions.txt";
+                        writeToSDFile(filename);
+                        Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
-
-
-                Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
-            }
-        });
-
-
         exit = (Button) findViewById(R.id.button5);
         exit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-
-
                 Intent intent = new Intent(MyActivity.this, confirmation.class);
                 startActivity(intent);
             }
@@ -288,8 +286,22 @@ public class MyActivity extends Activity implements SensorEventListener {
                 Intent i = new Intent(MyActivity.this, ListFileActivity.class);
                 startActivity(i);
 
-                Toast.makeText(getApplicationContext(), "Scroll down to the Routes folder to fild the list of Route Files available!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Scroll down to the Routes folder to find the list of Route Files available!", Toast.LENGTH_LONG).show();
 
+            }
+        });
+        check = (Button) findViewById(R.id.check);
+        check.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                try{readRaw();}
+                catch (FileNotFoundException w){}
+            }
+        });
+
+        check_done = (Button) findViewById(R.id.donecheck);
+        check_done.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "Feature will be made available in the next version", Toast.LENGTH_LONG).show();
             }
         });
 

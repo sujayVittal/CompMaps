@@ -76,16 +76,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignLeft="@+id/button4"
         android:layout_alignStart="@+id/button4" />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fname1"
-        android:hint="File Name"
-        android:layout_alignTop="@+id/button"
-        android:layout_toLeftOf="@+id/button4"
-        android:layout_alignBottom="@+id/button5"
-        android:layout_toRightOf="@+id/button"
-        android:layout_toEndOf="@+id/button" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -97,6 +87,27 @@
         android:layout_alignEnd="@+id/imageViewCompass"
         android:layout_alignLeft="@+id/imageViewCompass"
         android:layout_alignStart="@+id/imageViewCompass" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check"
+        android:id="@+id/check"
+        android:layout_below="@+id/textView"
+        android:layout_toLeftOf="@+id/button4"
+        android:layout_toRightOf="@+id/button"
+        android:layout_toEndOf="@+id/button"
+        android:layout_above="@+id/button2" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done Check"
+        android:id="@+id/donecheck"
+        android:layout_below="@+id/check"
+        android:layout_toLeftOf="@+id/button4"
+        android:layout_toRightOf="@+id/button"
+        android:layout_toEndOf="@+id/button" />
 
 
 </RelativeLayout>
