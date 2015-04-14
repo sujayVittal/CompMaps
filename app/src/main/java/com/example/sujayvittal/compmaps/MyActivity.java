@@ -33,6 +33,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /* Main activity*/
@@ -44,7 +46,7 @@ public class MyActivity extends Activity implements SensorEventListener {
     LinkedQueue lq = new LinkedQueue();
     TimeQueue cq = new TimeQueue();
     int data[] = new int[100];
-    
+
 
     // record the compass picture angle turned
     private float currentDegree = 0f;
@@ -263,28 +265,45 @@ public class MyActivity extends Activity implements SensorEventListener {
         // Start the animation
         image.startAnimation(ra);
         currentDegree = -degree;
+
         record = (Button) findViewById(R.id.button);
 
         tv = (TextView) findViewById(R.id.tv);
 
         record.setOnClickListener(new View.OnClickListener() {
+
             long time_sub = System.currentTimeMillis();
             public void onClick(View v) {
-                //long time_sub = System.currentTimeMillis();
-                //fname1 = (EditText)findViewById(R.id.fname1);
+                
+                final Timer t = new Timer();
+//Set the schedule function and rate
+                t.scheduleAtFixedRate(new TimerTask() {
 
-                long time_current = System.currentTimeMillis();
-                long time1 = time_current-time_sub;
-                Integer time = (int) (long) time1;
-                lq.insert((int)degree);
-                cq.insert(time_current);
-                cq.display();
+                                          @Override
+                                          public void run() {
+                                              long time_current = System.currentTimeMillis();
+                                              long time1 = (time_current-time_sub)%1000000000;
+                                              //Called each time when 1000 milliseconds (1 second) (the period parameter)
+                                              lq.insert((int) degree);
+                                              cq.insert(time_current);
+                                              cq.display();
+                                          }
+
+                                      },
+//Set how long before to start calling the TimerTask (in milliseconds)
+                        0,
+//Set the amount of time between each execution (in milliseconds)
+                        3000);
+
                 //fname1 = (EditText)findViewById(R.id.fname1);
 
                 Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
                 done = (Button) findViewById(R.id.button2);
                 done.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        if(t!= null){
+                            t.cancel();
+                        }
                         collection.add(lq.getValues());
                         String filename = "directions.txt";
                         writeToSDFile(filename);
