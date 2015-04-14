@@ -21,13 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,7 +42,9 @@ public class MyActivity extends Activity implements SensorEventListener {
     // define the display assembly compass picture
     private ImageView image;
     LinkedQueue lq = new LinkedQueue();
+    TimeQueue cq = new TimeQueue();
     int data[] = new int[100];
+    
 
     // record the compass picture angle turned
     private float currentDegree = 0f;
@@ -159,7 +159,7 @@ public class MyActivity extends Activity implements SensorEventListener {
      method reads in all lines of the file sequentially. */
     public static double timeElapsed(double min, double max) {
 
-       long time = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         long time2= SystemClock.currentThreadTimeMillis();
 
         long timeNo = time-time2;
@@ -242,7 +242,7 @@ public class MyActivity extends Activity implements SensorEventListener {
 
 
         // get the angle around the z-axis rotated
-         degree = Math.round(event.values[0]);
+        degree = Math.round(event.values[0]);
 
         tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
 
@@ -268,14 +268,17 @@ public class MyActivity extends Activity implements SensorEventListener {
         tv = (TextView) findViewById(R.id.tv);
 
         record.setOnClickListener(new View.OnClickListener() {
+            long time_sub = System.currentTimeMillis();
             public void onClick(View v) {
-                long time_sub = SystemClock.uptimeMillis();
+                //long time_sub = System.currentTimeMillis();
                 //fname1 = (EditText)findViewById(R.id.fname1);
 
                 long time_current = System.currentTimeMillis();
-                long time = time_sub-time_current;
+                long time1 = time_current-time_sub;
+                Integer time = (int) (long) time1;
                 lq.insert((int)degree);
-
+                cq.insert(time_current);
+                cq.display();
                 //fname1 = (EditText)findViewById(R.id.fname1);
 
                 Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
@@ -327,30 +330,7 @@ public class MyActivity extends Activity implements SensorEventListener {
 
 
     }
-    public Boolean write(String fname){
-        try {
-            MyActivity ref = new MyActivity();
-            String fpath = "/sdcard/"+fname+".txt";
-            File file = new File(fpath);
-            // If file does not exists, then create it
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            //bw.write();
-            while(lq.getSize()!=0) {
-                //bw.write(ref.lq.remove());
-            }
-            lq.display();
-            bw.close();
-            Log.d("Suceess", "Sucess");
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // not in use

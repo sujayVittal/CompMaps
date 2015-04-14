@@ -4,12 +4,12 @@ package com.example.sujayvittal.compmaps;
  * Created by sujayvittal on 18/02/15.
  * Data structure to store the directions
  */
-public class LinkedQueue {
-    private Node front, rear;
+public class TimeQueue {
+    private TimeNode front, rear;
     public int size;
 
     /* Constructor */
-    public LinkedQueue()
+    public TimeQueue()
     {
         front = null;
         rear = null;
@@ -26,9 +26,9 @@ public class LinkedQueue {
         return size;
     }
     /*  Function to insert an element to the queue */
-    public void insert(int data1)
+    public void insert(long data1)
     {
-        Node nptr = new Node(data1, null);
+        TimeNode nptr = new TimeNode(data1, null);
         if (rear == null) {
             front = nptr;
         }
@@ -41,9 +41,9 @@ public class LinkedQueue {
         rear = nptr;
     }
     /*  Function to remove front element from the queue */
-    public int remove()
+    public long remove()
     {
-        int firstNode = 0;
+        long firstNode = 0;
         size--;
         if (!isEmpty())
         {
@@ -57,9 +57,9 @@ public class LinkedQueue {
         return firstNode;
     }
     /*  Function to check the front element of the queue */
-    public int getFront()
+    public long getFront()
     {
-        int firstNode = 0;
+        long firstNode = 0;
         if (!isEmpty())
             firstNode = front.getData();
         return firstNode;
@@ -71,7 +71,7 @@ public class LinkedQueue {
      */
     public String getValues()
     {
-        Node firstNode=front;
+        TimeNode firstNode=front;
         String result="";
 
         while (firstNode!=null)
@@ -85,7 +85,7 @@ public class LinkedQueue {
     }
     public void display()
     {
-        Node firstnode=front;
+        TimeNode firstnode=front;
 
         while (firstnode!=null)
         {
@@ -93,25 +93,5 @@ public class LinkedQueue {
             firstnode=firstnode.next;
         }
 
-    }/*  Function to display the status of the queue */
-    /*public void display()
-    {
-       // int[] data= new int[2];
-        System.out.println();
-        if (size == 0)
-        {
-            System.out.print("Empty\n");
-        }
-        Node ptr = front;
-        while (ptr != rear.getLink() )
-        {
-           // data = ptr.getData();
-            // int a[] = new int[2];
-            int result = ptr.getData();
-            System.out.println(result);
-            ptr = ptr.getLink();
-            // System.out.print(ptr.getData() + " ");
-        }
-        System.out.println();
-    }*/
+    }
 }
