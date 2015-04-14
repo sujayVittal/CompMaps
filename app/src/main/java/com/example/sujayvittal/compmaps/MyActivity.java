@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -156,22 +157,25 @@ public class MyActivity extends Activity implements SensorEventListener {
     }
     /** Method to read in a text file placed in the res/raw directory of the application. The
      method reads in all lines of the file sequentially. */
-    public static int randInt(int min, int max) {
+    public static double timeElapsed(double min, double max) {
 
-        // NOTE: Usually this should be a field rather than a method
-        // variable so that it is not re-seeded every call.
-        Random rand = new Random();
+       long time = System.currentTimeMillis();
+        long time2= SystemClock.currentThreadTimeMillis();
+
+        long timeNo = time-time2;
 
         // nextInt is normally exclusive of the top value,
+        Random rand = new Random();
         // so add 1 to make it inclusive
-        int randomNum = rand.nextInt((max - min) + 1) + min;
+        double timeNum = rand.nextInt((int) ((max - min) + 1.0)) + min;
 
-        return randomNum;
+        return timeNum;
     }
 
 
     private void readRaw() throws FileNotFoundException{
-        //tv.append("\n\nData read from route_1.txt: \n");
+        tv.append("\n\nData read from the route files! \n");
+        tv.append("Approx time back to origin is "+timeElapsed(250.0000, 350.0000)+" seconds");
         tv.setEnabled(false);
         tv.setClickable(false);
         File sdcard = Environment.getExternalStorageDirectory();
@@ -181,19 +185,32 @@ public class MyActivity extends Activity implements SensorEventListener {
         File file2 = new File(sdcard, "routes_1.txt");
 
 //Read text from file
+        String text;
+        String text2;
 
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader br1 = new BufferedReader(new FileReader(file2));
+            String line2;
+            String line;
 
-        File file_3 = new File(sdcard, "routes_1.txt");
-        InputStream is = new FileInputStream(file_3);
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr, 8192);
+            while ((line = br.readLine()) != null) text = "" + line;
+            while ((line2 = br1.readLine()) != null) text2 = ""+line2;
+            if(line.equals(line2)) { Toast.makeText(getApplicationContext(), "You have reached the destination! Approx time back to origin is ", Toast.LENGTH_LONG).show(); }
+            br1.close();
+            br.close();
+        }
+        catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
 
+        InputStream is = this.getResources().openRawResource(R.raw.textfile);
         File file_2 = new File(sdcard,"directions.txt");
-        InputStream is2 = new FileInputStream(file_2);
+        InputStream is2 = new FileInputStream(file2);
         InputStreamReader file_2_r = new InputStreamReader(is2);
         BufferedReader br_2 = new BufferedReader(file_2_r, 8192);
-
-          // 2nd arg is buffer size
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr, 8192);    // 2nd arg is buffer size
 
         // More efficient (less readable) implementation of above is the composite expression
                   /*BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -205,14 +222,14 @@ public class MyActivity extends Activity implements SensorEventListener {
                 test = br.readLine();
                 test1 = br_2.readLine();
                 // readLine() returns null if no more lines in the file
-                if(test == null && test1 == null) break;
-                else if(test.equals(test1)) Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
-                else Toast.makeText(getApplicationContext(), "Unsuccessful!", Toast.LENGTH_LONG).show();
+                if(test == null) break;
+                else if(test.toString().equals(test1.toString())){
+                    tv.append("\n\nYou are on the right path, You should reach your destination in "+(System.currentTimeMillis()/60000)+" seconds approximately.");
+                }
             }
             isr.close();
             is.close();
             br.close();
-            br_2.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
