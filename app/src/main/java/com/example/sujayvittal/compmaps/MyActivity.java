@@ -25,9 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -64,6 +62,7 @@ public class MyActivity extends Activity implements SensorEventListener {
 
     TextView tvHeading;
     ArrayList<String> collection = new ArrayList<String>();
+    ArrayList<String> collection2 = new ArrayList<String>();
     Button record, done, exit, directions, check, check_done;
 
     @Override
@@ -122,7 +121,7 @@ public class MyActivity extends Activity implements SensorEventListener {
      WRITE_EXTERNAL_STORAGE permission to the manifest file or this method will throw
      a FileNotFound Exception because you won't have write permission. */
 
-    private void writeToSDFile(String filename){
+    private void writeToSDFile(ArrayList<String> data,String filename){
 
         // Find the root of the external storage.
         // See http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
@@ -141,7 +140,7 @@ public class MyActivity extends Activity implements SensorEventListener {
         try {
             FileOutputStream f = new FileOutputStream(file);
             PrintWriter pw = new PrintWriter(f);
-            pw.println(collection);
+            pw.println(data);
             //pw.println("Here is a second line.");
             pw.flush();
             pw.close();
@@ -175,68 +174,25 @@ public class MyActivity extends Activity implements SensorEventListener {
     }
 
 
-    private void readRaw() throws FileNotFoundException{
-        tv.append("\n\nData read from the route files! \n");
-        tv.append("Approx time back to origin is "+timeElapsed(250.0000, 350.0000)+" seconds");
-        tv.setEnabled(false);
-        tv.setClickable(false);
-        File sdcard = Environment.getExternalStorageDirectory();
-
-//Get the text file
-        File file = new File(sdcard,"directions.txt");
-        File file2 = new File(sdcard, "routes_1.txt");
-
-//Read text from file
-        String text;
-        String text2;
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            BufferedReader br1 = new BufferedReader(new FileReader(file2));
-            String line2;
-            String line;
-
-            while ((line = br.readLine()) != null) text = "" + line;
-            while ((line2 = br1.readLine()) != null) text2 = ""+line2;
-            if(line.equals(line2)) { Toast.makeText(getApplicationContext(), "You have reached the destination! Approx time back to origin is ", Toast.LENGTH_LONG).show(); }
-            br1.close();
-            br.close();
+    private void readRaw() throws IOException{
+        FileInputStream f1 =  new FileInputStream("directions.txt");
+        FileInputStream f2 = new FileInputStream("time.txt");
+        String directions, time;
+        BufferedReader myInput = new BufferedReader
+                (new InputStreamReader(f1));
+        StringBuilder sb = new StringBuilder();
+        while ((directions = myInput.readLine()) != null) {
+            sb.append(directions);
         }
-        catch (IOException e) {
-            //You'll need to add proper error handling here
+        BufferedReader myInput2 = new BufferedReader
+                (new InputStreamReader(f2));
+        StringBuilder sb2 = new StringBuilder();
+        while ((directions = myInput2.readLine()) != null) {
+            sb2.append(directions);
         }
 
-        InputStream is = this.getResources().openRawResource(R.raw.textfile);
-        File file_2 = new File(sdcard,"directions.txt");
-        InputStream is2 = new FileInputStream(file2);
-        InputStreamReader file_2_r = new InputStreamReader(is2);
-        BufferedReader br_2 = new BufferedReader(file_2_r, 8192);
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr, 8192);    // 2nd arg is buffer size
 
-        // More efficient (less readable) implementation of above is the composite expression
-                  /*BufferedReader br = new BufferedReader(new InputStreamReader(
-                           this.getResources().openRawResource(R.raw.textfile)), 8192);*/
 
-        try {
-            String test, test1;
-            while (true){
-                test = br.readLine();
-                test1 = br_2.readLine();
-                // readLine() returns null if no more lines in the file
-                if(test == null) break;
-                else if(test.toString().equals(test1.toString())){
-                    tv.append("\n\nYou are on the right path, You should reach your destination in "+(System.currentTimeMillis()/60000)+" seconds approximately.");
-                }
-            }
-            isr.close();
-            is.close();
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        tv.setEnabled(false);
-        tv.setClickable(false);
     }
 
     @Override
@@ -274,7 +230,7 @@ public class MyActivity extends Activity implements SensorEventListener {
 
             long time_sub = System.currentTimeMillis();
             public void onClick(View v) {
-                
+
                 final Timer t = new Timer();
 //Set the schedule function and rate
                 t.scheduleAtFixedRate(new TimerTask() {
@@ -285,7 +241,7 @@ public class MyActivity extends Activity implements SensorEventListener {
                                               long time1 = (time_current-time_sub)%1000000000;
                                               //Called each time when 1000 milliseconds (1 second) (the period parameter)
                                               lq.insert((int) degree);
-                                              cq.insert(time_current);
+                                              cq.insert(time1);
                                               cq.display();
                                           }
 
@@ -306,7 +262,7 @@ public class MyActivity extends Activity implements SensorEventListener {
                         }
                         collection.add(lq.getValues());
                         String filename = "directions.txt";
-                        writeToSDFile(filename);
+                        writeToSDFile(collection, filename);
                         Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -333,14 +289,21 @@ public class MyActivity extends Activity implements SensorEventListener {
         check.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 try{readRaw();}
-                catch (FileNotFoundException w){}
+                catch (IOException w){ //
+                //
+                }
             }
         });
 
         check_done = (Button) findViewById(R.id.donecheck);
         check_done.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Toast.makeText(getApplicationContext(), "Feature will be made available in the next version", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Feature will be made available in the next version", Toast.LENGTH_LONG).show();
+                collection2.add(cq.getValues());
+                String filename = "time.txt";
+                writeToSDFile(collection2, filename);
+                Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
+
             }
         });
 
