@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -177,19 +178,67 @@ public class MyActivity extends Activity implements SensorEventListener {
     private void readRaw() throws IOException{
         FileInputStream f1 =  new FileInputStream("directions.txt");
         FileInputStream f2 = new FileInputStream("time.txt");
-        String directions, time;
+        FileInputStream f3 = new FileInputStream("check_directions.txt");
+        FileInputStream f4 = new FileInputStream("check_time.txt");
+        String directions1, time1, time_test, directions_test;
+
+        //recorded directions are opened
         BufferedReader myInput = new BufferedReader
                 (new InputStreamReader(f1));
-        StringBuilder sb = new StringBuilder();
-        while ((directions = myInput.readLine()) != null) {
-            sb.append(directions);
+        directions1 = myInput.readLine();
+        String[] sb = new String[1000];
+        for(int d=0; d<directions1.length(); d++) {
+            sb[d]=directions1;
         }
+
+        //recorded time is opened
         BufferedReader myInput2 = new BufferedReader
                 (new InputStreamReader(f2));
-        StringBuilder sb2 = new StringBuilder();
-        while ((directions = myInput2.readLine()) != null) {
-            sb2.append(directions);
+        time1 = myInput2.readLine();
+        String[] sb2 = new String[1000];
+        for(int d=0; d<time1.length(); d++) {
+            sb2[d]=time1;
         }
+
+        //check_directions file is read
+        BufferedReader myInput3 = new BufferedReader
+                (new InputStreamReader(f3));
+        directions_test = myInput3.readLine();
+        String[] sb3 = new String[1000];
+        for(int d=0; d<directions_test.length(); d++) {
+            sb3[d]=directions_test;
+        }
+
+        //Check_time file is read
+        BufferedReader myInput4 = new BufferedReader
+                (new InputStreamReader(f4));
+        time_test = myInput4.readLine();
+        String[] sb4 = new String[1000];
+        for(int d=0; d<time_test.length(); d++) {
+            sb4[d]=time_test;
+        }
+        if(sb.length == sb3.length){
+            int count=0, sum=0;
+        for(int g=1 ; g<sb.length; g++){
+                if(sb[g]==sb3[g]) count++;
+                else {
+                    for(int k=count; k<sb2.length; k++){
+                        sum+=Integer.parseInt(sb2[k]);
+                    }
+                }
+        }
+        }
+        if(sb.length>sb3.length){
+            tv.append("\n\nRE-ROUTE! You are taking a long path.\n");
+        }
+        if(sb.length<sb3.length){
+            int sum=0;
+            for(int g=sb.length ; g<sb3.length; g++){
+                sum+=Integer.parseInt(sb3[g]);
+            }
+            tv.append("\n\n You will reach your destination in "+sum+"seconds\n\n");
+        }
+
 
 
 
@@ -288,10 +337,33 @@ public class MyActivity extends Activity implements SensorEventListener {
         check = (Button) findViewById(R.id.check);
         check.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                try{readRaw();}
-                catch (IOException w){ //
-                //
+
+                String ret = "";
+
+                try {
+                    InputStream inputStream = new FileInputStream("/downloads/directions.txt");
+
+                    if ( inputStream != null ) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                        String receiveString = "";
+                        StringBuilder stringBuilder = new StringBuilder();
+
+                        while ( (receiveString = bufferedReader.readLine()) != null ) {
+                            stringBuilder.append(receiveString);
+                        }
+
+                        inputStream.close();
+                        ret = stringBuilder.toString();
+                    }
                 }
+                catch (FileNotFoundException e) {
+                    Log.e(TAG, "File not found: " + e.toString());
+                } catch (IOException e) {
+                    Log.e(TAG, "Can not read file: " + e.toString());
+                }
+
+                tv.append(ret);
             }
         });
 
