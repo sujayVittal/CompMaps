@@ -26,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -65,6 +64,7 @@ public class MyActivity extends Activity implements SensorEventListener {
     ArrayList<String> collection = new ArrayList<String>();
     ArrayList<String> collection2 = new ArrayList<String>();
     Button record, done, exit, directions, check, check_done;
+    long time_of_travel;
 
     @Override
     protected void onResume() {
@@ -341,29 +341,92 @@ public class MyActivity extends Activity implements SensorEventListener {
                 String ret = "";
 
                 try {
-                    InputStream inputStream = new FileInputStream("/downloads/directions.txt");
+                    File myFile1 = new File("/sdcard/Download/directions.txt");
+                    FileInputStream fIn1 = new FileInputStream(myFile1);
+                    BufferedReader myReader1 = new BufferedReader(
+                            new InputStreamReader(fIn1));
+                    File myFile2 = new File("/sdcard/Download/check_directions.txt");
+                    FileInputStream fIn2 = new FileInputStream(myFile2);
+                    BufferedReader myReader2 = new BufferedReader(
+                            new InputStreamReader(fIn2));
+                    File myFile3 = new File("/sdcard/Download/check_time.txt");
+                    FileInputStream fIn3 = new FileInputStream(myFile3);
+                    BufferedReader myReader3 = new BufferedReader(
+                            new InputStreamReader(fIn3));
+                    String aDataRow1 = "";
+                    String aDataRow2 = "";
+                    String aDataRow3 = "";
+                    String aBuffer1 = "";
+                    String aBuffer2 ="";
+                    String aBuffer3 = "";
+                    int i=0;
 
-                    if ( inputStream != null ) {
-                        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                        String receiveString = "";
-                        StringBuilder stringBuilder = new StringBuilder();
+                    while ((aDataRow1 = myReader1.readLine()) != null ) {
 
-                        while ( (receiveString = bufferedReader.readLine()) != null ) {
-                            stringBuilder.append(receiveString);
-                        }
-
-                        inputStream.close();
-                        ret = stringBuilder.toString();
+                        aBuffer1 += aDataRow1 + "\n";
+                        i++;
                     }
-                }
-                catch (FileNotFoundException e) {
-                    Log.e(TAG, "File not found: " + e.toString());
-                } catch (IOException e) {
-                    Log.e(TAG, "Can not read file: " + e.toString());
+                    while ((aDataRow2 = myReader2.readLine()) != null) {
+                        aBuffer2 += aDataRow2 + "\n";
+                    }
+                    while ((aDataRow3 = myReader3.readLine()) != null) {
+                        aBuffer3 += aDataRow3 + "\n";
+                    }
+                    aBuffer1= aBuffer1.substring(1,aBuffer1.length()-1);
+
+                    aBuffer2= aBuffer2.substring(1,aBuffer2.length()-1);
+
+                    aBuffer3= aBuffer3.substring(1,aBuffer3.length()-1);
+
+                    /*aBuffer1= aBuffer1.substring();
+
+                    aBuffer2= aBuffer2.substring(0, aBuffer2.length()-1);
+
+                    aBuffer3= aBuffer3.substring(0, aBuffer3.length()-1);*/
+
+                    /*tv.append("\n"+aBuffer1);
+                    tv.append("\n"+aBuffer2);
+                    tv.append("\n"+aBuffer3);*/
+
+                    String[] directions_record= aBuffer1.split(" ");
+                    String[] directions_stored=aBuffer2.split(" ");
+                    String[] time_stored = aBuffer3.split(" ");
+                    if(directions_record.length == directions_stored.length){
+                        for(int q=0; q<directions_record.length;q++){
+                            if(Integer.parseInt(directions_record[q])<(Integer.parseInt(directions_stored[q])+5) || Integer.parseInt(directions_record[q])>(Integer.parseInt(directions_stored[q])+5) || Integer.parseInt(directions_record[q])==(Integer.parseInt(directions_stored[q])+5)){
+                                Toast.makeText(getApplicationContext(), "Right direction!", Toast.LENGTH_LONG).show();
+                            }
+                            else  Toast.makeText(getApplicationContext(), "You are on the wrong path", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    else if(directions_record.length<directions_stored.length){
+
+                        time_stored[0]=time_stored[0].substring(1);
+                        time_stored[time_stored.length-1] = time_stored[time_stored.length-1].substring(0, time_stored[time_stored.length-1].length()-1);
+                        int timee=0;
+                        for(int q=directions_record.length; q<time_stored.length; q++)
+                            timee+=Integer.parseInt(time_stored[q]);
+                            tv.append("\nTime to travel: "+timee);
+
+                    }
+                    else if(directions_record.length>directions_stored.length){
+                        tv.append("\nYou have gone very far!");
+                    }
+
+
+
+
+
+                    myReader1.close();
+                    myReader2.close();
+                    myReader3.close();
+
+                } catch (Exception e) {
+
                 }
 
-                tv.append(ret);
+
             }
         });
 
