@@ -407,7 +407,7 @@ public class MyActivity extends Activity implements SensorEventListener {
                         int timee=0;
                         for(int q=directions_record.length; q<time_stored.length; q++)
                             timee+=Integer.parseInt(time_stored[q]);
-                            tv.append("\nTime to travel: "+timee);
+                            tv.append("\nTime to travel: "+timee+" Milliseconds");
 
                     }
                     else if(directions_record.length>directions_stored.length){
