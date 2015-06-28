@@ -10,5 +10,6 @@
     <string name="title_activity_confirmation">confirmation</string>
     <string name="title_activity_file_operations">FileOperations</string>
     <string name="title_activity_list_file">ListFileActivity</string>
+    <string name="title_activity_my_provider">MyProvider</string>
 
 </resources>

@@ -1,12 +1,14 @@
 package com.example.sujayvittal.compmaps;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -71,10 +73,10 @@ public class MyActivity extends Activity implements SensorEventListener {
         super.onResume();
 
         // for the system's orientation sensor registered listeners
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
+       // mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
         //Added for counting the number of steps
-        mSensorManager.registerListener(this, mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
-        mSensorManager.registerListener(this, mStepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
+       // mSensorManager.registerListener(this, mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
+       // mSensorManager.registerListener(this, mStepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
 
@@ -83,12 +85,12 @@ public class MyActivity extends Activity implements SensorEventListener {
         super.onPause();
 
         // to stop the listener and save battery
-        mSensorManager.unregisterListener(this);
+        //mSensorManager.unregisterListener(this);
     }
     protected void onStop() {
         super.onStop();
-        mSensorManager.unregisterListener(this, mStepCounterSensor);
-        mSensorManager.unregisterListener(this, mStepDetectorSensor);
+    //    mSensorManager.unregisterListener(this, mStepCounterSensor);
+     //   mSensorManager.unregisterListener(this, mStepDetectorSensor);
     }
     private void printCollection(Collection collection) {
 
@@ -118,9 +120,7 @@ public class MyActivity extends Activity implements SensorEventListener {
         tv.setClickable(false);
     }
 
-    /** Method to write ascii text characters to file on SD card. Note that you must add a
-     WRITE_EXTERNAL_STORAGE permission to the manifest file or this method will throw
-     a FileNotFound Exception because you won't have write permission. */
+    /** Method to write ASCII characters to the SD card */
 
     private void writeToSDFile(ArrayList<String> data,String filename){
 
@@ -327,7 +327,7 @@ public class MyActivity extends Activity implements SensorEventListener {
         directions = (Button) findViewById(R.id.button4);
         directions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(MyActivity.this, ListFileActivity.class);
+                Intent i = new Intent(MyActivity.this, MyProvider.class);
                 startActivity(i);
 
                 Toast.makeText(getApplicationContext(), "Scroll down to the Routes folder to find the list of Route Files available!", Toast.LENGTH_LONG).show();
@@ -452,6 +452,7 @@ public class MyActivity extends Activity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // not in use
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -472,6 +473,14 @@ public class MyActivity extends Activity implements SensorEventListener {
         mStepDetectorSensor = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
+    }
+    public void onClickAddName(View view) {
+        ContentValues values = new ContentValues();
+        values.put(MyProvider.name, ((EditText) findViewById(R.id.txtName))
+                .getText().toString());
+        Uri uri = getContentResolver().insert(MyProvider.CONTENT_URI, values);
+        Toast.makeText(getBaseContext(), "New record inserted", Toast.LENGTH_LONG)
+                .show();
     }
 
 
