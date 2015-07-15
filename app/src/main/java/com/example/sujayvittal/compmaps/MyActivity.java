@@ -1,14 +1,12 @@
 package com.example.sujayvittal.compmaps;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
@@ -73,10 +71,10 @@ public class MyActivity extends Activity implements SensorEventListener {
         super.onResume();
 
         // for the system's orientation sensor registered listeners
-       // mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_GAME);
         //Added for counting the number of steps
-       // mSensorManager.registerListener(this, mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
-       // mSensorManager.registerListener(this, mStepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mStepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
 
@@ -85,12 +83,12 @@ public class MyActivity extends Activity implements SensorEventListener {
         super.onPause();
 
         // to stop the listener and save battery
-        //mSensorManager.unregisterListener(this);
+        mSensorManager.unregisterListener(this);
     }
     protected void onStop() {
         super.onStop();
-    //    mSensorManager.unregisterListener(this, mStepCounterSensor);
-     //   mSensorManager.unregisterListener(this, mStepDetectorSensor);
+        mSensorManager.unregisterListener(this, mStepCounterSensor);
+        mSensorManager.unregisterListener(this, mStepDetectorSensor);
     }
     private void printCollection(Collection collection) {
 
@@ -120,7 +118,9 @@ public class MyActivity extends Activity implements SensorEventListener {
         tv.setClickable(false);
     }
 
-    /** Method to write ASCII characters to the SD card */
+    /** Method to write ascii text characters to file on SD card. Note that you must add a
+     WRITE_EXTERNAL_STORAGE permission to the manifest file or this method will throw
+     a FileNotFound Exception because you won't have write permission. */
 
     private void writeToSDFile(ArrayList<String> data,String filename){
 
@@ -219,14 +219,14 @@ public class MyActivity extends Activity implements SensorEventListener {
         }
         if(sb.length == sb3.length){
             int count=0, sum=0;
-        for(int g=1 ; g<sb.length; g++){
+            for(int g=1 ; g<sb.length; g++){
                 if(sb[g]==sb3[g]) count++;
                 else {
                     for(int k=count; k<sb2.length; k++){
                         sum+=Integer.parseInt(sb2[k]);
                     }
                 }
-        }
+            }
         }
         if(sb.length>sb3.length){
             tv.append("\n\nRE-ROUTE! You are taking a long path.\n");
@@ -327,106 +327,18 @@ public class MyActivity extends Activity implements SensorEventListener {
         directions = (Button) findViewById(R.id.button4);
         directions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(MyActivity.this, MyProvider.class);
+                Intent i = new Intent(MyActivity.this, MainActivity_TableLayout.class);
                 startActivity(i);
 
-                Toast.makeText(getApplicationContext(), "Scroll down to the Routes folder to find the list of Route Files available!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "This intent demonstrates the use of table layout!", Toast.LENGTH_LONG).show();
 
             }
         });
         check = (Button) findViewById(R.id.check);
         check.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-
-                String ret = "";
-
-                try {
-                    File myFile1 = new File("/sdcard/Download/directions.txt");
-                    FileInputStream fIn1 = new FileInputStream(myFile1);
-                    BufferedReader myReader1 = new BufferedReader(
-                            new InputStreamReader(fIn1));
-                    File myFile2 = new File("/sdcard/Download/check_directions.txt");
-                    FileInputStream fIn2 = new FileInputStream(myFile2);
-                    BufferedReader myReader2 = new BufferedReader(
-                            new InputStreamReader(fIn2));
-                    File myFile3 = new File("/sdcard/Download/check_time.txt");
-                    FileInputStream fIn3 = new FileInputStream(myFile3);
-                    BufferedReader myReader3 = new BufferedReader(
-                            new InputStreamReader(fIn3));
-                    String aDataRow1 = "";
-                    String aDataRow2 = "";
-                    String aDataRow3 = "";
-                    String aBuffer1 = "";
-                    String aBuffer2 ="";
-                    String aBuffer3 = "";
-                    int i=0;
-
-                    while ((aDataRow1 = myReader1.readLine()) != null ) {
-
-                        aBuffer1 += aDataRow1 + "\n";
-                        i++;
-                    }
-                    while ((aDataRow2 = myReader2.readLine()) != null) {
-                        aBuffer2 += aDataRow2 + "\n";
-                    }
-                    while ((aDataRow3 = myReader3.readLine()) != null) {
-                        aBuffer3 += aDataRow3 + "\n";
-                    }
-                    aBuffer1= aBuffer1.substring(1,aBuffer1.length()-1);
-
-                    aBuffer2= aBuffer2.substring(1,aBuffer2.length()-1);
-
-                    aBuffer3= aBuffer3.substring(1,aBuffer3.length()-1);
-
-                    /*aBuffer1= aBuffer1.substring();
-
-                    aBuffer2= aBuffer2.substring(0, aBuffer2.length()-1);
-
-                    aBuffer3= aBuffer3.substring(0, aBuffer3.length()-1);*/
-
-                    /*tv.append("\n"+aBuffer1);
-                    tv.append("\n"+aBuffer2);
-                    tv.append("\n"+aBuffer3);*/
-
-                    String[] directions_record= aBuffer1.split(" ");
-                    String[] directions_stored=aBuffer2.split(" ");
-                    String[] time_stored = aBuffer3.split(" ");
-                    if(directions_record.length == directions_stored.length){
-                        for(int q=0; q<directions_record.length;q++){
-                            if(Integer.parseInt(directions_record[q])<(Integer.parseInt(directions_stored[q])+5) || Integer.parseInt(directions_record[q])>(Integer.parseInt(directions_stored[q])+5) || Integer.parseInt(directions_record[q])==(Integer.parseInt(directions_stored[q])+5)){
-                                Toast.makeText(getApplicationContext(), "Right direction!", Toast.LENGTH_LONG).show();
-                            }
-                            else  Toast.makeText(getApplicationContext(), "You are on the wrong path", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    else if(directions_record.length<directions_stored.length){
-
-                        time_stored[0]=time_stored[0].substring(1);
-                        time_stored[time_stored.length-1] = time_stored[time_stored.length-1].substring(0, time_stored[time_stored.length-1].length()-1);
-                        int timee=0;
-                        for(int q=directions_record.length; q<time_stored.length; q++)
-                            timee+=Integer.parseInt(time_stored[q]);
-                            tv.append("\nTime to travel: "+timee+" Milliseconds");
-
-                    }
-                    else if(directions_record.length>directions_stored.length){
-                        tv.append("\nYou have gone very far!");
-                    }
-
-
-
-
-
-                    myReader1.close();
-                    myReader2.close();
-                    myReader3.close();
-
-                } catch (Exception e) {
-
-                }
-
-
+                Intent i = new Intent(MyActivity.this, MainActivity_ContentProvider.class);
+                startActivity(i);
             }
         });
 
@@ -452,7 +364,6 @@ public class MyActivity extends Activity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // not in use
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -473,14 +384,6 @@ public class MyActivity extends Activity implements SensorEventListener {
         mStepDetectorSensor = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
-    }
-    public void onClickAddName(View view) {
-        ContentValues values = new ContentValues();
-        values.put(MyProvider.name, ((EditText) findViewById(R.id.txtName))
-                .getText().toString());
-        Uri uri = getContentResolver().insert(MyProvider.CONTENT_URI, values);
-        Toast.makeText(getBaseContext(), "New record inserted", Toast.LENGTH_LONG)
-                .show();
     }
 
 

@@ -11,5 +11,8 @@
     <string name="title_activity_file_operations">FileOperations</string>
     <string name="title_activity_list_file">ListFileActivity</string>
     <string name="title_activity_my_provider">MyProvider</string>
+    <string name="title_activity_my_table_provider">MainActivity_TableProvider</string>
+    <string name="title_activity_main_activity">MainActivity_ContentProvider</string>
+    <string name="retrieve_routes">Retreive Routes</string>
 
 </resources>
