@@ -8,14 +8,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,7 +52,6 @@ public class MyActivity extends Activity implements SensorEventListener {
     private Sensor mStepDetectorSensor;
     private static final String TAG = "DIRECTIONS";
 
-    EditText fname1;
 
     TextView tv;
     public float degree;
@@ -64,7 +60,7 @@ public class MyActivity extends Activity implements SensorEventListener {
     ArrayList<String> collection = new ArrayList<String>();
     ArrayList<String> collection2 = new ArrayList<String>();
     Button record, done, exit, directions, check, check_done;
-    long time_of_travel;
+
 
     @Override
     protected void onResume() {
@@ -90,33 +86,7 @@ public class MyActivity extends Activity implements SensorEventListener {
         mSensorManager.unregisterListener(this, mStepCounterSensor);
         mSensorManager.unregisterListener(this, mStepDetectorSensor);
     }
-    private void printCollection(Collection collection) {
 
-        for (Object obj : collection) {
-            System.out.println(obj);
-        }
-    }
-    private void checkExternalMedia(){
-        boolean mExternalStorageAvailable = false;
-        boolean mExternalStorageWriteable = false;
-        String state = Environment.getExternalStorageState();
-
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            // Can read and write the media
-            mExternalStorageAvailable = mExternalStorageWriteable = true;
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            // Can only read the media
-            mExternalStorageAvailable = true;
-            mExternalStorageWriteable = false;
-        } else {
-            // Can't read or write
-            mExternalStorageAvailable = mExternalStorageWriteable = false;
-        }
-        tv.append("\n\nExternal Media: readable="
-                + mExternalStorageAvailable + " writable=" + mExternalStorageWriteable);
-        tv.setEnabled(false);
-        tv.setClickable(false);
-    }
 
     /** Method to write ascii text characters to file on SD card. Note that you must add a
      WRITE_EXTERNAL_STORAGE permission to the manifest file or this method will throw
@@ -125,7 +95,6 @@ public class MyActivity extends Activity implements SensorEventListener {
     private void writeToSDFile(ArrayList<String> data,String filename){
 
         // Find the root of the external storage.
-        // See http://developer.android.com/guide/topics/data/data-storage.html#filesExternal
 
         File root = android.os.Environment.getExternalStorageDirectory();
         tv.append("\nExternal file system root: "+root);
@@ -281,7 +250,7 @@ public class MyActivity extends Activity implements SensorEventListener {
             public void onClick(View v) {
 
                 final Timer t = new Timer();
-//Set the schedule function and rate
+    //Set the schedule function and rate
                 t.scheduleAtFixedRate(new TimerTask() {
 
                                           @Override
@@ -295,9 +264,9 @@ public class MyActivity extends Activity implements SensorEventListener {
                                           }
 
                                       },
-//Set how long before to start calling the TimerTask (in milliseconds)
+    //Set how long before to start calling the TimerTask (in milliseconds)
                         0,
-//Set the amount of time between each execution (in milliseconds)
+    //Set the amount of time between each execution (in milliseconds)
                         3000);
 
                 //fname1 = (EditText)findViewById(R.id.fname1);
@@ -354,10 +323,6 @@ public class MyActivity extends Activity implements SensorEventListener {
             }
         });
 
-
-
-
-
     }
 
     @Override
@@ -385,6 +350,5 @@ public class MyActivity extends Activity implements SensorEventListener {
                 .getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
     }
-
-
+    
 }
