@@ -350,5 +350,5 @@ public class MyActivity extends Activity implements SensorEventListener {
                 .getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
     }
-    
+
 }

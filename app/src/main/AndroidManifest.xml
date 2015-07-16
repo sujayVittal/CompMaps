@@ -33,10 +33,6 @@
             android:label="@string/title_activity_confirmation" >
         </activity>
         <activity
-            android:name=".FileOperations"
-            android:label="@string/title_activity_file_operations" >
-        </activity>
-        <activity
             android:name=".ListFileActivity"
             android:label="@string/title_activity_list_file" >
         </activity>
